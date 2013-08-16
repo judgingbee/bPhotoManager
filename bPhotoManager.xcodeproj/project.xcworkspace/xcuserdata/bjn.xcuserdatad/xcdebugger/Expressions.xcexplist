@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<VariablesViewState
+   version = "1.0">
+   <ContextStates>
+      <ContextState
+         contextName = "-[ImageBrowserView awakeFromNib]:ImageBrowserView.m">
+         <PersistentStrings>
+            <PersistentString
+               value = "layer.geometryFlipped">
+            </PersistentString>
+         </PersistentStrings>
+      </ContextState>
+   </ContextStates>
+</VariablesViewState>

@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+	<key>ALBUMS</key>
+	<array>
+		<string>album1</string>
+		<string>album2</string>
+	</array>
+	<key>FAVOURITES</key>
+	<dict>
+		<key>My Pictures</key>
+		<string>/Users/bjn/Pictures</string>
+		<key>Wallpapers</key>
+		<string>/Users/bjn/Pictures/Wallpapers</string>
+	</dict>
+	<key>CURPLACE</key>
+	<string>/Users/bjn/Pictures</string>
+	<key>SELECTEDPATH</key>
+	<string>/Users/bjn/Pictures/test</string>
+</dict>
+</plist>
