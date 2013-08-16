@@ -302,7 +302,7 @@
 {
     downPoint = [self convertPoint:[theEvent locationInWindow] fromView:nil];
 //    [layer setGeometryFlipped:YES];
-    [self displayIsFlipped];
+//    [self displayIsFlipped];
 //    downPoint.y = layer.bounds.size.height - downPoint.y;
 //    不知道为什么在MacbookAir（MacOS 10.7）里面需要上面的那一句，
 
