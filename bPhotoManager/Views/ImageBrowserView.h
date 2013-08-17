@@ -63,6 +63,9 @@
     CGPoint             downPoint;
     NSMutableArray      *cells;
     NSCondition         *cond;
+    
+    BOOL                needComputeMaxRate;
+    
 }
 
 @property (retain, readwrite) id <ImageBrowserViewDataSource> dataSource;

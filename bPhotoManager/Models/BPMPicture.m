@@ -45,7 +45,7 @@ static CGImageSourceRef notFoundCellImage        = NULL;
     if (layer) return YES;
     
     layer = [[CALayer alloc] init];
-    [layer setGeometryFlipped:YES];
+//    [layer setGeometryFlipped:YES];
     
     layer.contents = (id)[self thumbnail];
     

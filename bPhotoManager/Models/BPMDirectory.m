@@ -48,7 +48,7 @@ static CGImageRef folderFrameImage        = NULL;
     if (layer) return YES;
     
     layer = [[CALayer alloc] init];
-    [layer setGeometryFlipped:YES];
+//    [layer setGeometryFlipped:YES];
 //    view = v;
     
 //    [content setTmpSavedCell:self];

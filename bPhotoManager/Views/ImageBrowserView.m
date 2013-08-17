@@ -21,6 +21,11 @@
 @synthesize isMinSized;
 @synthesize selectedCells;
 
+- (BOOL)isFlipped
+{
+    return YES;
+}
+
 #pragma mark - Initializing
 
 - (id)initWithFrame:(NSRect)frame
@@ -55,13 +60,14 @@
              object:self];
     
     layer = [[CALayer alloc] init];
-    [self setWantsLayer:YES];
+    [self setWantsLayer:YES];	
     [self setLayer: layer];
 //    [layer setGeometryFlipped:YES];
 //    [self displayIsFlipped];
     // geometryFlipped property of layer dont work , so I decide not use it.
     // and conver the coordinate manually
 //    layer.transform = CATransform3DMakeScale(1.0f, -1.0f, 1.0f);
+//    layer.sublayerTransform = CATransform3DMakeScale(1.0f, -1.0f, 1.0f);
     
     selectRectLayer = [[CALayer alloc] init];
     CGColorRef tmpRef =CGColorCreateGenericRGB(0, 0.6, 1, 0.8);
@@ -233,39 +239,47 @@
 
 - (void) reLayout
 {
-    NSLog(@"relayout");
+//    NSLog(@"relayout");
+
     int cellsCnt = (int)[cells count];
     if (cellsCnt == 0) return;
     
     ImageBrowserCell *cell;
-    CGFloat rate, maxRate, rateDiff;
+    CGFloat rate, rateDiff, maxRate;
     CGFloat x = 0, y = 0;
     
-    CGFloat width = self.bounds.size.width;
+    CGFloat ViewWidth = self.bounds.size.width;
     CGFloat cellWidth = ((maxCellWidth-minCellWidth)*zoomValue)+minCellWidth;
     isMinSized = NO;
-    if (cellWidth+(minInterSpace*2)+50 > width) isMinSized = YES;
-    if (cellWidth+(minInterSpace*2) > width) return;
+    if (cellWidth+(minInterSpace*2) > ViewWidth) return;
+    if (cellWidth+(minInterSpace*2)+50 > ViewWidth) isMinSized = YES;
 
-    CGFloat n = floorf( (width - minInterSpace) / (cellWidth + minInterSpace));
-    CGFloat interSpace = (width - n*cellWidth) / (n+1);
+    int cntInRow = floorf( (ViewWidth - minInterSpace) / (cellWidth + minInterSpace));
+    CGFloat interSpace = (ViewWidth - cntInRow*cellWidth) / (cntInRow+1);
+
+    int rowCnt= ceilf((CGFloat)cellsCnt/(CGFloat)cntInRow);
     
-    for (int i = 0; i < ceilf(cellsCnt/n); i++) {
+//    NSLog(@"rows: %d, colums: %d, cellsCnt: %d", rowCnt, cntInRow, cellsCnt);
+
+    //display pictures from left top corner
+    for (int i = 0; i < rowCnt; i++) {
         x = interSpace;
         y += interSpace;
         
-        // get max rate (heightDivWidth)
-        cell = [cells objectAtIndex:(i*n)];
-        maxRate = (CGFloat)[cell height]/(CGFloat)[cell width];
-        for (int j = (i*n)+1; (j<(i+1)*n)&&(j<cellsCnt); j++) {
-            cell = [cells objectAtIndex:j];
-            rate = (CGFloat)[cell height]/(CGFloat)[cell width];
-            if (maxRate < rate) maxRate  = rate;
+        for (int i = 0; i < rowCnt; i++) {
+            // get max rate (heightDivWidth)
+            cell = [cells objectAtIndex:(i*cntInRow)];
+            maxRate = (CGFloat)[cell height]/(CGFloat)[cell width];
+            for (int j = (i*cntInRow)+1; (j<(i+1)*cntInRow)&&(j<cellsCnt); j++) {
+                cell = [cells objectAtIndex:j];
+                rate = (CGFloat)[cell height]/(CGFloat)[cell width];
+                if (maxRate < rate) maxRate  = rate;
+            }
         }
         
         // set cell frame of a row
-        for (int j = 0; (j<n)&&((i*n)+j<cellsCnt); j++) {
-            cell = [cells objectAtIndex:(i*n)+j];
+        for (int j = 0; (j<cntInRow)&&((i*cntInRow)+j<cellsCnt); j++) {
+            cell = [cells objectAtIndex:(i*cntInRow)+j];
             rate = (CGFloat)[cell height]/(CGFloat)[cell width];
             rateDiff = maxRate - rate;
             [[cell layer] setFrame: CGRectMake(x+((cellWidth + interSpace)*j), 
@@ -281,19 +295,17 @@
         
         y += (maxRate*cellWidth);
     }
-//    NSView *v = [(NSScrollView*)self.superview documentView];
-//    NSRect b = v.bounds;
-//    b.size.height = y+interSpace;
-//    [v setFrame:b];
+    //set the size of browser view
     CGFloat visibleHeight = [self visibleRect].size.height;
+    
     if (y+interSpace > visibleHeight)
-        [self setFrame:NSMakeRect(0, 0, width, y+interSpace)];
+        [self setFrame:NSMakeRect(0, 0, ViewWidth, y+interSpace)];
     else
-        [self setFrame:NSMakeRect(0, 0, width, visibleHeight)];
-        
-//    [[((NSScrollView*)self.superview.superview) scroll] scrollPoint:NSZeroPoint];
-//    [((NSScrollView*)self.superview.superview) refl];
-    [self scrollPoint:NSMakePoint(0, self.bounds.size.height)];
+        [self setFrame:NSMakeRect(0, 0, ViewWidth, visibleHeight)];
+    
+    [self scrollPoint:NSMakePoint(0, 0)];
+    
+
 }
 
 #pragma mark - Mouse event
